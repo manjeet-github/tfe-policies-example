@@ -105,7 +105,7 @@ resource "tfe_sentinel_policy" "tfe_policies_only" {
   enforce_mode = "hard-mandatory"
 }
 
-# Networking policies:
+## Networking policies:
 
 resource "tfe_sentinel_policy" "aws-block-allow-all-cidr" {
   name         = "aws-block-allow-all-cidr"
