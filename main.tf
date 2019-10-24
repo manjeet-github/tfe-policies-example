@@ -62,10 +62,6 @@ resource "tfe_policy_set" "production" {
   policy_ids = [
     "${tfe_sentinel_policy.aws-restrict-instance-type-prod.id}",
   ]
-
-  workspace_external_ids = [
-    "${local.workspaces["app-prod"]}",
-  ]
 }
 
 resource "tfe_policy_set" "development" {
@@ -75,11 +71,6 @@ resource "tfe_policy_set" "development" {
 
   policy_ids = [
     "${tfe_sentinel_policy.aws-restrict-instance-type-dev.id}",
-  ]
-
-  workspace_external_ids = [
-    "${local.workspaces["app-dev"]}",
-    "${local.workspaces["app-dev-sandbox-bennett"]}",
   ]
 }
 
@@ -92,9 +83,6 @@ resource "tfe_policy_set" "sentinel" {
     "${tfe_sentinel_policy.tfe_policies_only.id}",
   ]
 
-  workspace_external_ids = [
-    "${local.workspaces["tfe-policies"]}",
-  ]
 }
 
 # Test/experimental policies:
@@ -202,3 +190,75 @@ resource "tfe_sentinel_policy" "require-modules-from-pmr" {
   policy       = "${data.template_file.require-modules-from-pmr.rendered}"
   enforce_mode = "hard-mandatory"
 } 
+
+resource "tfe_sentinel_policy" "validate-all-variables-have-descriptions.sentinel" {
+  name         = "validate-all-variables-have-descriptions.sentinel"
+  description  = "Validate all variables have descriptions"
+  organization = "${var.tfe_organization}"
+  policy       = "${file("./validate-all-variables-have-descriptions.sentinel")}"
+  enforce_mode = "soft-mandatory"
+}
+
+resource "tfe_sentinel_policy" "restrict-cost-and-percentage-increase.sentinel" {
+  name         = "restrict-cost-and-percentage-increase.sentinel"
+  description  = "Restrict cost and percentage increase"
+  organization = "${var.tfe_organization}"
+  policy       = "${file("./restrict-cost-and-percentage-increase.sentinel")}"
+  enforce_mode = "soft-mandatory"
+}
+
+resource "tfe_sentinel_policy" "require-all-resources-from-pmr.sentinel" {
+  name         = "require-all-resources-from-pmr.sentinel"
+  description  = "Require all resopurces from PMR"
+  organization = "${var.tfe_organization}"
+  policy       = "${file("./require-all-resources-from-pmr.sentinel")}"
+  enforce_mode = "soft-mandatory"
+}
+
+resource "tfe_sentinel_policy" "prevent-remote-exec-provisioners-on-null-resources.sentinel" {
+  name         = "prevent-remote-exec-provisioners-on-null-resources.sentinel"
+  description  = "Prevent remote exec provisioners on null resources"
+  organization = "${var.tfe_organization}"
+  policy       = "${file("./prevent-remote-exec-provisioners-on-null-resources.sentinel")}"
+  enforce_mode = "soft-mandatory"
+}
+
+resource "tfe_sentinel_policy" "limit-proposed-monthly-cost.sentinel" {
+  name         = "limit-proposed-monthly-cost.sentinel"
+  description  = "Limit proposed monthly cost"
+  organization = "${var.tfe_organization}"
+  policy       = "${file("./limit-proposed-monthly-cost.sentinel")}"
+  enforce_mode = "soft-mandatory"
+}
+
+resource "tfe_sentinel_policy" "limit-cost-by-workspace-type.sentinel" {
+  name         = "limit-cost-by-workspace-type.sentinel"
+  description  = "Limit cost by workspace type"
+  organization = "${var.tfe_organization}"
+  policy       = "${file("./limit-cost-by-workspace-type.sentinel")}"
+  enforce_mode = "soft-mandatory"
+}
+
+resource "tfe_sentinel_policy" "enforce-mandatory-tags.sentinel" {
+  name         = "enforce-mandatory-tags.sentinel"
+  description  = "Enforce Mandatory Tags"
+  organization = "${var.tfe_organization}"
+  policy       = "${file("./enforce-mandatory-tags.sentinel")}"
+  enforce_mode = "soft-mandatory"
+}
+
+resource "tfe_sentinel_policy" "restrict-availability-zones.sentinel" {
+  name         = "restrict-availability-zones.sentinel"
+  description  = "Restrict Availability Zones on AWS"
+  organization = "${var.tfe_organization}"
+  policy       = "${file("./restrict-availability-zones.sentinel")}"
+  enforce_mode = "soft-mandatory"
+}
+
+resource "tfe_sentinel_policy" "restrict-ec2-instance-type.sentinel" {
+  name         = "restrict-ec2-instance-type.sentinel"
+  description  = "Restrict ec2 instance type on AWS"
+  organization = "${var.tfe_organization}"
+  policy       = "${file("./restrict-ec2-instance-type.sentinel")}"
+  enforce_mode = "soft-mandatory"
+}
