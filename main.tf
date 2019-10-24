@@ -191,7 +191,7 @@ resource "tfe_sentinel_policy" "require-modules-from-pmr" {
   enforce_mode = "hard-mandatory"
 } 
 
-resource "tfe_sentinel_policy" "validate-all-variables-have-descriptions.sentinel" {
+resource "tfe_sentinel_policy" "validate-all-variables-have-descriptions" {
   name         = "validate-all-variables-have-descriptions"
   description  = "Validate all variables have descriptions"
   organization = "${var.tfe_organization}"
