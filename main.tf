@@ -177,7 +177,7 @@ resource "tfe_sentinel_policy" "gcp-restrict-machine-type" {
 data "template_file" "require-modules-from-pmr" {
   template = "${file("./require-modules-from-pmr.sentinel")}"
 
-  vars {
+  vars = {
     hostname = "${var.tfe_hostname}"
     organization = "${var.tfe_organization}"
   }
